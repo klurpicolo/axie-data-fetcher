@@ -1,0 +1,47 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id "com.netflix.dgs.codegen" version "5.1.2"
+}
+
+group = 'io.klur.axie'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+
+	implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release"))
+	implementation 'com.netflix.graphql.dgs:graphql-dgs-webflux-starter'
+
+
+//	implementation 'io.r2dbc:r2dbc-postgresql'
+	runtimeOnly 'com.h2database:h2'
+	implementation 'io.r2dbc:r2dbc-h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+generateJava {
+	schemaPaths = ["${projectDir}/src/main/resources/schema"] // List of directories containing schema files
+	packageName = 'io.klur.axie.datafetcher.generated' // The package name to use to generate sources
+	generateClient = true // Enable generating the type safe query API
+}

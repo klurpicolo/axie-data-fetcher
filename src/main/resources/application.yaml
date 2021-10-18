@@ -1,0 +1,23 @@
+debug: true
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    platform: h2
+    username: sa
+    password:
+#  jpa:
+#    platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: update
+#  r2dbc:
+#    url: r2dbc:postgres://oxmmfiwz:J9a_6_-albR6eqJTn2P046GMp0i0mzT5@john.db.elephantsql.com/oxmmfiwz
+#    username: oxmmfiwz
+#    password: J9a_6_-albR6eqJTn2P046GMp0i0mzT5
+
+server:
+  port: 8080
+
+h2-server:
+  port: 8081
