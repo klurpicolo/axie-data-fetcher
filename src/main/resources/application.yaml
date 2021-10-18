@@ -7,9 +7,9 @@ spring:
     platform: h2
     username: sa
     password:
+  h2:
+    console:
+      enabled: true
 
 server:
   port: 8080
-
-h2-server:
-  port: 8081

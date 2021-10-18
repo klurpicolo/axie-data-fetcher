@@ -20,20 +20,23 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
+
+	// Spring
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	runtimeOnly 'com.h2database:h2'
 
 	implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release"))
 	implementation 'com.netflix.graphql.dgs:graphql-dgs-webflux-starter'
 
+	// Utilities
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
-//	implementation 'io.r2dbc:r2dbc-postgresql'
-	runtimeOnly 'com.h2database:h2'
-	implementation 'io.r2dbc:r2dbc-h2'
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 test {

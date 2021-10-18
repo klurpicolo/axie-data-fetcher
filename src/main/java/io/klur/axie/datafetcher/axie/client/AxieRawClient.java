@@ -1,4 +1,4 @@
-package io.klur.axie.datafetcher.axie;
+package io.klur.axie.datafetcher.axie.client;
 
 import com.netflix.graphql.dgs.client.GraphQLResponse;
 import com.netflix.graphql.dgs.client.WebClientGraphQLClient;
@@ -18,7 +18,7 @@ public class AxieRawClient {
 
   private final WebClientGraphQLClient axieClient;
 
-  public Mono<List<SoldHistory>> getRecentlySold() {
+  public List<SoldHistoryRes> getRecentlySold() {
     var query = "query GetRecentlyAxiesSold($from: Int, $size: Int) {\n" +
         "  settledAuctions {\n" +
         "    axies(from: $from, size: $size) {\n" +
@@ -39,7 +39,7 @@ public class AxieRawClient {
     Map<String, ?> variables = Map.of("from", 0, "size", 10);
 
     Mono<GraphQLResponse> res = axieClient.reactiveExecuteQuery(query, variables);
-    return res.map(r -> r.extractValueAsObject("data.settledAuctions.axies.results", SoldHistory[].class)).map(Arrays::asList);
+    return res.map(r -> r.extractValueAsObject("data.settledAuctions.axies.results", SoldHistoryRes[].class)).map(Arrays::asList).block();
 
   }
 
