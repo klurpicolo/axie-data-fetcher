@@ -25,6 +25,20 @@ public class SoldHistory {
   private String clazz;
   private int breedCount;
 
+  private String eyesName;
+  private String eyesClazz;
+  private String earsName;
+  private String earsClazz;
+  private String backName;
+  private String backClazz;
+  private String mouthName;
+  private String mouthClazz;
+  private String hornName;
+  private String hornClazz;
+  private String tailName;
+  private String tailClazz;
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

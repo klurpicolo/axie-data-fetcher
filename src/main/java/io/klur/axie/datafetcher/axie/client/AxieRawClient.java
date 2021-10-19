@@ -35,7 +35,12 @@ public class AxieRawClient {
         "  name\n" +
         "  class\n" +
         "  breedCount\n" +
-        "}\n";
+        "  parts {\n" +
+        "    name\n" +
+        "    class\n" +
+        "    type\n" +
+        "  }\n" +
+        "}";
     Map<String, ?> variables = Map.of("from", 0, "size", 10);
 
     Mono<GraphQLResponse> res = axieClient.reactiveExecuteQuery(query, variables);
