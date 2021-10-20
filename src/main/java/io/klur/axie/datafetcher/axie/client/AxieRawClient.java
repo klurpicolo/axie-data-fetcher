@@ -45,7 +45,6 @@ public class AxieRawClient {
 
     Mono<GraphQLResponse> res = axieClient.reactiveExecuteQuery(query, variables);
     return res.map(r -> r.extractValueAsObject("data.settledAuctions.axies.results", SoldHistoryRes[].class)).map(Arrays::asList).block();
-
   }
 
 }

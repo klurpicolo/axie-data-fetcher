@@ -1,12 +1,9 @@
-package io.klur.axie.datafetcher.axie;
+package io.klur.axie.datafetcher.axie.repository.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
@@ -18,26 +15,13 @@ import java.util.Objects;
 public class SoldHistory {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long _id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private String _id;
   private String id;
   private String name;
+  @Column(name="class")
   private String clazz;
   private int breedCount;
-
-  private String eyesName;
-  private String eyesClazz;
-  private String earsName;
-  private String earsClazz;
-  private String backName;
-  private String backClazz;
-  private String mouthName;
-  private String mouthClazz;
-  private String hornName;
-  private String hornClazz;
-  private String tailName;
-  private String tailClazz;
-
 
   @Override
   public boolean equals(Object o) {
