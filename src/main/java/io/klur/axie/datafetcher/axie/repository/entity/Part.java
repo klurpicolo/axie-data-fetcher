@@ -20,7 +20,7 @@ public class Part {
   private String _id;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name="axie_id", referencedColumnName = "id", nullable=false)
+  @JoinColumn(name="axie_id", referencedColumnName = "axie_id", nullable=false)
   private SoldHistory soldHistory;
   private String name;
   @Column(name = "class")

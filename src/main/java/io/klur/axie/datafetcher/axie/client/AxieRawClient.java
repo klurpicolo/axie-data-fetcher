@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -19,6 +17,10 @@ public class AxieRawClient {
   private final WebClientGraphQLClient axieClient;
 
   public List<SoldHistoryRes> getRecentlySold() {
+    return getRecentlySold(0, 1);
+  }
+
+  public List<SoldHistoryRes> getRecentlySold(int from, int size) {
     var query = "query GetRecentlyAxiesSold($from: Int, $size: Int) {\n" +
         "  settledAuctions {\n" +
         "    axies(from: $from, size: $size) {\n" +
@@ -41,10 +43,16 @@ public class AxieRawClient {
         "    type\n" +
         "  }\n" +
         "}";
-    Map<String, ?> variables = Map.of("from", 0, "size", 10);
+    Map<String, ?> variables = Map.of("from", from, "size", size);
 
-    Mono<GraphQLResponse> res = axieClient.reactiveExecuteQuery(query, variables);
-    return res.map(r -> r.extractValueAsObject("data.settledAuctions.axies.results", SoldHistoryRes[].class)).map(Arrays::asList).block();
+    Mono<GraphQLResponse> res = axieClient.reactiveExecuteQuery(query, variables)
+        .retry(3)
+        .doOnError(ex -> log.error(ex.getMessage()));
+
+    return new ArrayList<>(Objects.requireNonNull(res
+        .map(r -> r.extractValueAsObject("data.settledAuctions.axies.results", SoldHistoryRes[].class))
+        .map(Arrays::asList)
+        .block()));
   }
 
 }

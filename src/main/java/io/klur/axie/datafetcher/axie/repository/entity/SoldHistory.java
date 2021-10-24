@@ -17,9 +17,11 @@ public class SoldHistory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private String _id;
-  private String id;
+  @Column(name="axie_id")
+  private String axieId;
   private String name;
   @Column(name="class")
+
   private String clazz;
   private int breedCount;
 

@@ -13,3 +13,11 @@ spring:
 
 server:
   port: 8080
+
+
+logging:
+  level:
+    reactor:
+      netty:
+        http:
+          client: OFF
