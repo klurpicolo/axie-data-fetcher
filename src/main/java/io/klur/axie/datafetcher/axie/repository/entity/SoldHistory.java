@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Objects;
 
 @Getter
@@ -17,13 +19,15 @@ public class SoldHistory {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private String _id;
+  private Instant timestamp;
   @Column(name="axie_id")
   private String axieId;
   private String name;
   @Column(name="class")
-
   private String clazz;
   private int breedCount;
+  private BigDecimal withPrice;
+  private BigDecimal withPriceUsd;
 
   @Override
   public boolean equals(Object o) {

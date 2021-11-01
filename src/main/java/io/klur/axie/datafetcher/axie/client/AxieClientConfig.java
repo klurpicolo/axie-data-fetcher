@@ -2,6 +2,7 @@ package io.klur.axie.datafetcher.axie.client;
 
 import com.netflix.graphql.dgs.client.MonoGraphQLClient;
 import com.netflix.graphql.dgs.client.WebClientGraphQLClient;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,11 @@ public class AxieClientConfig {
   WebClientGraphQLClient webClientGraphQLClient() {
     var webClient = WebClient.create("https://graphql-gateway.axieinfinity.com/graphql");
     return MonoGraphQLClient.createWithWebClient(webClient);
+  }
+
+  @Bean
+  Jackson2ObjectMapperBuilderCustomizer objectMapperBuilderCustomizer() {
+    return builder -> builder.failOnUnknownProperties(false);
   }
 
 }

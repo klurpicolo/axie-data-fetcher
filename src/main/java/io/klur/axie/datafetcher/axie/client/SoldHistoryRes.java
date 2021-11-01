@@ -14,5 +14,6 @@ public class SoldHistoryRes {
   private String clazz;
   private int breedCount;
   private List<PartRes> parts;
+  private TransferHistoryInSettledAuctionRes transferHistory;
 
 }

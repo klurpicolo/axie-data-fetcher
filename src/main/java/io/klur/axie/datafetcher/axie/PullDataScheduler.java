@@ -29,33 +29,31 @@ public class PullDataScheduler {
   @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
   public void pullSoldHistoryData() {
     log.info("pullSoldHistoryData at : {}", Instant.now().toString());
-
     var totalRecords = new ArrayList<SoldHistoryRes>();
     var toFetchMore = true;
-    var batchNumber = 0;
-    while(toFetchMore && batchNumber < 10) {
+    int batchPullTimes = 10;
+    for(var batchNumber = 0; batchNumber< batchPullTimes && toFetchMore; batchNumber++ ) {
       var records = axieClient.getRecentlySold(batchNumber, 20);
       log.info("Fetch batch {}", batchNumber);
-
       var recordIdx = 0;
       for (var record : records) {
         recordIdx++;
         //duplicated in db or already exists in totalRecords
         if(soldHistoryRepository.findByAxieId(record.getId()).isPresent()) {
-          log.info("Stop on records since duplicated with db: {}", record);
+          log.error("Stop on records since duplicated with db: {}", record);
           toFetchMore = false;
           break;
         } else if(totalRecords.stream().anyMatch(r -> r.equals(record))) {
-          log.info("Record duplicated {}/{} with current fetch: {}", recordIdx, records.size(), record);
+          log.warn("Record duplicated {}/{} with current fetch: {}", recordIdx, records.size(), record);
         } else {
           totalRecords.add(record);
         }
       }
-      batchNumber++;
     }
+    var distinct = totalRecords.stream().distinct().collect(Collectors.toList());
 
-    log.info("Total size {}", totalRecords.size());
-    totalRecords.forEach(this::saveSoldHistoryAndPart);
+    log.info("Total size {}", distinct.size());
+    distinct.forEach(this::saveSoldHistoryAndPart);
   }
 
   private void saveSoldHistoryAndPart(SoldHistoryRes res) {
@@ -73,11 +71,15 @@ public class PullDataScheduler {
   }
 
   private SoldHistory toRecord(SoldHistoryRes res) {
+    var lastTransferHistoryRes = res.getTransferHistory().getResults().get(0);
     return SoldHistory.builder()
       .axieId(res.getId())
+      .timestamp(Instant.ofEpochSecond(lastTransferHistoryRes.getTimestamp()))
       .name(res.getName())
       .clazz(res.getClazz())
       .breedCount(res.getBreedCount())
+      .withPrice(lastTransferHistoryRes.getWithPrice())
+      .withPriceUsd(lastTransferHistoryRes.getWithPriceUsd())
       .build();
   }
 

@@ -22,27 +22,43 @@ public class AxieRawClient {
 
   public List<SoldHistoryRes> getRecentlySold(int from, int size) {
     var query = "query GetRecentlyAxiesSold($from: Int, $size: Int) {\n" +
-        "  settledAuctions {\n" +
-        "    axies(from: $from, size: $size) {\n" +
-        "      total\n" +
-        "      results {\n" +
-        "          ...AxieSettledBrief\n" +
-        "      }\n" +
-        "    }\n" +
-        "  }\n" +
-        "}\n" +
-        "\n" +
-        "fragment AxieSettledBrief on Axie {\n" +
-        "  id\n" +
-        "  name\n" +
-        "  class\n" +
-        "  breedCount\n" +
-        "  parts {\n" +
-        "    name\n" +
-        "    class\n" +
-        "    type\n" +
-        "  }\n" +
-        "}";
+      "  settledAuctions {\n" +
+      "    axies(from: $from, size: $size) {\n" +
+      "      total\n" +
+      "      results {\n" +
+      "          ...AxieSettledBrief\n" +
+      "          transferHistory {\n" +
+      "          ...TransferHistoryInSettledAuction\n" +
+      "        }\n" +
+      "      }\n" +
+      "    }\n" +
+      "  }\n" +
+      "}\n" +
+      "\n" +
+      "fragment AxieSettledBrief on Axie {\n" +
+      "  id\n" +
+      "  name\n" +
+      "  class\n" +
+      "  breedCount\n" +
+      "  parts {\n" +
+      "    name\n" +
+      "    class\n" +
+      "    type\n" +
+      "  }\n" +
+      "}\n" +
+      "\n" +
+      "fragment TransferHistoryInSettledAuction on TransferRecords {\n" +
+      "  total\n" +
+      "  results {\n" +
+      "    ...TransferRecordInSettledAuction\n" +
+      "  }\n" +
+      "}\n" +
+      "\n" +
+      "fragment TransferRecordInSettledAuction on TransferRecord {\n" +
+      "  timestamp\n" +
+      "  withPrice\n" +
+      "  withPriceUsd\n" +
+      "}";
     Map<String, ?> variables = Map.of("from", from, "size", size);
 
     Mono<GraphQLResponse> res = axieClient.reactiveExecuteQuery(query, variables)
